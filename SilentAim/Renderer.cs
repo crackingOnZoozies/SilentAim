@@ -14,6 +14,7 @@ namespace SilentAim
         public bool aimOnSpotted = true;
         public bool autoLock = false;
         public bool useFov = false;
+        public int aimDelay = 10;
 
         public Vector4 circleColor = new Vector4(1, 0, 1, 1);
 
@@ -24,6 +25,7 @@ namespace SilentAim
             ImGui.Checkbox("aimbot in/off", ref aimbot);
             if (aimbot)
             {
+                ImGui.DragInt("aim delay", ref aimDelay);
                 ImGui.Checkbox("aim on spotted", ref aimOnSpotted);
                 ImGui.Checkbox("autoLock", ref autoLock);
                 ImGui.Checkbox("fov", ref useFov);

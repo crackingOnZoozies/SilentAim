@@ -17,7 +17,7 @@ List<Entity> entities = new List<Entity>();
 Entity localPlayer = new Entity();
 
 const int hotKeyLockAim = 0x12;//alt
-const int hotKey = 0x06; // mouse 5
+const int hotKey = 0x01; // mouse left
 
 /*const int PlusAttack = 65537;
 const int MinusAttack = 256;*/
@@ -144,8 +144,8 @@ while (true)
         if (entities[0].pixelDistance < renderer.FOV && renderer.useFov)
         {
             swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
-
-            int entIndex = swed.ReadInt(localPlayer.pawnAddress, Offsets.m_iIDEntIndex);
+            Thread.Sleep(renderer.aimDelay);
+            /*int entIndex = swed.ReadInt(localPlayer.pawnAddress, Offsets.m_iIDEntIndex);
             Thread.Sleep(10);
 
             if (entIndex != -1)
@@ -156,7 +156,7 @@ while (true)
 
                 swed.WriteInt(client, Offsets.dwForceAttack, 256); // - attack
                 Thread.Sleep(10);
-            }
+            }*/
 
             swed.WriteFloat(client + Offsets.xAddress, x);
             swed.WriteFloat(client + Offsets.yAddress, y);
@@ -164,7 +164,8 @@ while (true)
         else if (renderer.FOV > 0 && !renderer.useFov)
         {
             swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
-
+            Thread.Sleep(renderer.aimDelay);
+            /*
             int entIndex = swed.ReadInt(localPlayer.pawnAddress, Offsets.m_iIDEntIndex);
             Thread.Sleep(10);
 
@@ -176,7 +177,7 @@ while (true)
 
                 swed.WriteInt(client, Offsets.dwForceAttack, 256); // - attack
                 Thread.Sleep(10);
-            }
+            }*/
 
             swed.WriteFloat(client + Offsets.xAddress, x);
             swed.WriteFloat(client + Offsets.yAddress, y);

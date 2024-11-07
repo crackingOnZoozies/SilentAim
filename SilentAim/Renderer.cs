@@ -9,11 +9,14 @@ namespace SilentAim
     {
         public Vector2 screenSize = new Vector2(1920, 1080); // my screen size
         public float FOV = 50; // in pixels
+
         public bool aimbot = false;
+        public bool silent = false;
         public bool aimOnTeam = false;
         public bool aimOnSpotted = true;
-        public bool autoLock = false;
+        public bool autoShoot = false;
         public bool useFov = false;
+        public bool aimOnClosest = false;
         public int aimDelay = 10;
 
         public Vector4 circleColor = new Vector4(1, 0, 1, 1);
@@ -25,10 +28,12 @@ namespace SilentAim
             ImGui.Checkbox("aimbot in/off", ref aimbot);
             if (aimbot)
             {
+                ImGui.Checkbox("aim on closest by diatance", ref aimOnClosest);
+                ImGui.Checkbox("silent", ref silent);
                 ImGui.DragInt("aim delay", ref aimDelay);
                 ImGui.Checkbox("aim on spotted", ref aimOnSpotted);
-                ImGui.Checkbox("autoLock", ref autoLock);
-                ImGui.Checkbox("fov", ref useFov);
+                ImGui.Checkbox("autoShoot", ref autoShoot);
+                if (!aimOnClosest) ImGui.Checkbox("fov", ref useFov);
                 if (useFov)
                 {
                     ImGui.SliderFloat("fov", ref FOV, 10, 300.0f);

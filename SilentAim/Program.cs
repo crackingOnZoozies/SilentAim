@@ -16,7 +16,7 @@ renderer.Start().Wait();
 List<Entity> entities = new List<Entity>();
 Entity localPlayer = new Entity();
 
-const int hotKeyLockAim = 0x12;//alt
+const int hotKeyAimSwitch = 0x12;//alt
 const int hotKey = 0x01; // mouse left
 
 /*const int PlusAttack = 65537;
@@ -27,7 +27,7 @@ const int MinusAttack = 256;*/
 while (true)
 {
     entities.Clear();
-    
+
     //get entity list
     IntPtr entityList = swed.ReadPointer(client, Offsets.dwEntityList);
 
@@ -118,73 +118,93 @@ while (true)
     }
 
 
-    /*if (GetAsyncKeyState(hotKeyLockAim) < 0)
-    {
-        renderer.autoLock = !renderer.autoLock;
-    }*/
-
-    entities = entities.OrderBy(o => o.pixelDistance).ToList();
+    if (renderer.aimbot) { }
 
     
-    if (entities.Count > 0 && (GetAsyncKeyState(hotKey)<0 || renderer.autoLock) )
+
+    if (renderer.aimOnClosest)
     {
-
-        float y, x;
-        x = swed.ReadFloat(client+Offsets.xAddress);
-        y = swed.ReadFloat(client+Offsets.yAddress);
-
-        //get view pos
-        Vector3 playerView = Vector3.Add(localPlayer.origin, localPlayer.view);
-        Vector3 entityView = Vector3.Add(entities[0].origin, entities[0].view);
-
-        //get angles
-        Vector2 newAngles = Calculate.CalculateAngles(playerView, entities[0].head);
-        Vector3 newNagles3D = new Vector3(newAngles.Y, newAngles.X, 0.0f);
-
-        if (entities[0].pixelDistance < renderer.FOV && renderer.useFov)
+        entities = entities.OrderBy(o => o.distance).ToList();
+        if (entities.Count > 0 && (GetAsyncKeyState(hotKey) < 0))
         {
+
+            float y, x;
+            x = swed.ReadFloat(client + Offsets.xAddress);
+            y = swed.ReadFloat(client + Offsets.yAddress);
+
+            //get view pos
+            Vector3 playerView = Vector3.Add(localPlayer.origin, localPlayer.view);
+            Vector3 entityView = Vector3.Add(entities[0].origin, entities[0].view);
+
+            //get angles
+            Vector2 newAngles = Calculate.CalculateAngles(playerView, entities[0].head);
+            Vector3 newNagles3D = new Vector3(newAngles.Y, newAngles.X, 0.0f);
+
             swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
             Thread.Sleep(renderer.aimDelay);
-            /*int entIndex = swed.ReadInt(localPlayer.pawnAddress, Offsets.m_iIDEntIndex);
-            Thread.Sleep(10);
 
-            if (entIndex != -1)
+
+
+            if (renderer.silent)
             {
-                //if (entities[0].team!=localPlayer.team || renderer.aimOnTeam)
-                swed.WriteInt(client, Offsets.dwForceAttack, 65537); // + attack
-                Thread.Sleep(10);
+                swed.WriteFloat(client + Offsets.xAddress, x);
+                swed.WriteFloat(client + Offsets.yAddress, y);
+            }
 
-                swed.WriteInt(client, Offsets.dwForceAttack, 256); // - attack
-                Thread.Sleep(10);
-            }*/
 
-            swed.WriteFloat(client + Offsets.xAddress, x);
-            swed.WriteFloat(client + Offsets.yAddress, y);
         }
-        else if (renderer.FOV > 0 && !renderer.useFov)
-        {
-            swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
-            Thread.Sleep(renderer.aimDelay);
-            /*
-            int entIndex = swed.ReadInt(localPlayer.pawnAddress, Offsets.m_iIDEntIndex);
-            Thread.Sleep(10);
-
-            if (entIndex != -1)
-            {
-                //if (entities[0].team!=localPlayer.team || renderer.aimOnTeam)
-                swed.WriteInt(client, Offsets.dwForceAttack, 65537); // + attack
-                Thread.Sleep(10);
-
-                swed.WriteInt(client, Offsets.dwForceAttack, 256); // - attack
-                Thread.Sleep(10);
-            }*/
-
-            swed.WriteFloat(client + Offsets.xAddress, x);
-            swed.WriteFloat(client + Offsets.yAddress, y);
-        }
-
-
     }
+    else
+    {
+        entities = entities.OrderBy(o => o.pixelDistance).ToList();
+        if (entities.Count > 0 && (GetAsyncKeyState(hotKey) < 0))
+        {
+
+            float y, x;
+            x = swed.ReadFloat(client + Offsets.xAddress);
+            y = swed.ReadFloat(client + Offsets.yAddress);
+
+            //get view pos
+            Vector3 playerView = Vector3.Add(localPlayer.origin, localPlayer.view);
+            Vector3 entityView = Vector3.Add(entities[0].origin, entities[0].view);
+
+            //get angles
+            Vector2 newAngles = Calculate.CalculateAngles(playerView, entities[0].head);
+            Vector3 newNagles3D = new Vector3(newAngles.Y, newAngles.X, 0.0f);
+
+            if (entities[0].pixelDistance < renderer.FOV && renderer.useFov)
+            {
+                swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
+                Thread.Sleep(renderer.aimDelay);
+
+                
+
+                if (renderer.silent)
+                {
+                    swed.WriteFloat(client + Offsets.xAddress, x);
+                    swed.WriteFloat(client + Offsets.yAddress, y);
+                }
+
+            }
+            else if (renderer.FOV > 0 && !renderer.useFov)
+            {
+                swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
+                Thread.Sleep(renderer.aimDelay);
+
+                
+
+                if (renderer.silent)
+                {
+                    swed.WriteFloat(client + Offsets.xAddress, x);
+                    swed.WriteFloat(client + Offsets.yAddress, y);
+                }
+
+            }
+
+
+        }
+    }
+    
 
 }
 //imports 

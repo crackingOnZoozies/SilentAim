@@ -21,6 +21,7 @@ namespace SilentAim
         public float distance { get; set; }
         public float pixelDistance { get; set; }
         public bool spotted { get; set; }
+        public bool scopped { get; set; }
 
     }
 }

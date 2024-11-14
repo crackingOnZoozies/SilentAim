@@ -19,9 +19,9 @@ Entity localPlayer = new Entity();
 const int hotKeyAimSwitch = 0x12;//alt
 const int hotKey = 0x01; // mouse left
 
-/*const int PlusAttack = 65537;
-const int MinusAttack = 256;*/
-
+const int PlusAttack = 65537;
+const int MinusAttack = 256;
+const int attackMinus2 = 16777472;
 
 //aimbot loop
 while (true)
@@ -117,15 +117,17 @@ while (true)
         Console.ResetColor();
     }
 
+    localPlayer.scopped =  swed.ReadBool(Offsets.dwLocalPlayerPawn, Offsets.m_bOldIsScoped);
+    
 
     if (renderer.aimbot) { }
 
-    
+    bool swedBool = swed.ReadInt(client + Offsets.dwForceAttack) == PlusAttack;
 
     if (renderer.aimOnClosest)
     {
         entities = entities.OrderBy(o => o.distance).ToList();
-        if (entities.Count > 0 && (GetAsyncKeyState(hotKey) < 0))
+        if (entities.Count > 0 && (swedBool))
         {
 
             float y, x;
@@ -157,7 +159,7 @@ while (true)
     else
     {
         entities = entities.OrderBy(o => o.pixelDistance).ToList();
-        if (entities.Count > 0 && (GetAsyncKeyState(hotKey) < 0))
+        if (entities.Count > 0 && (swedBool))
         {
 
             float y, x;

@@ -9,14 +9,14 @@ namespace SilentAim
     public static class Offsets
     {
         //buttons.cs
-        public static int dwForceAttack = 0x184E4D0;
+        public static int dwForceAttack = 0x183A5E0;
 
         //offsets.cs
-        public static int dwViewAngles = 0x1A5E650;
-        public static int dwLocalPlayerPawn = 0x1855CE8;
-        public static int dwEntityList = 0x19F2488;
+        public static int dwViewAngles = 0x1A49960;
+        public static int dwLocalPlayerPawn = 0x1841AE8;
+        public static int dwEntityList = 0x19DD958;
 
-        public static int dwViewMatrix = 0x1A54550; // offset for circle
+        public static int dwViewMatrix = 0x1A3FAE0; // offset for circle
 
         //client.dll.cs
         public static int m_hPlayerPawn = 0x80C;

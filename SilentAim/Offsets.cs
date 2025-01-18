@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +10,14 @@ namespace SilentAim
     public static class Offsets
     {
         //buttons.cs
-        public static int dwForceAttack = 0x18614C0;
+        public static int dwForceAttack = 0x1864620;
 
         //offsets.cs
-        public static int dwViewAngles = 0x1A89710;
-        public static int dwLocalPlayerPawn = 0x1868CC8;
-        public static int dwEntityList = 0x1A146E8;
+        public static int dwViewAngles = 0x1A8C830;
+        public static int dwLocalPlayerPawn = 0x186BDF8;
+        public static int dwEntityList = 0x1A176C8;
 
-        public static int dwViewMatrix = 0x1A7F610; // offset for circle
+        public static int dwViewMatrix = 0x1A82740; // offset for circle
 
         //client.dll.cs
         public static int m_hPlayerPawn = 0x80C;
@@ -36,9 +37,15 @@ namespace SilentAim
 
         public static int m_bOldIsScoped = 0x242C; // bool
 
+        public static int m_aimPunchAngle = 0x1584;
+        public static int m_iShotsFired = 0x23FC;
+
         // x and y addies
         public static IntPtr yAddress = dwViewAngles;
         public static IntPtr xAddress = dwViewAngles + 0x4;
+
+        public static IntPtr yAddressSilent = 0x1A8A4A8;
+        public static IntPtr xAddressSilent = 0x1A8A4A8 + 0x4;
 
     }
 }

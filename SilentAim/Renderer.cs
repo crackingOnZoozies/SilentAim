@@ -17,6 +17,12 @@ namespace SilentAim
         public bool autoShoot = false;
         public bool useFov = false;
         public bool aimOnClosest = false;
+        public bool followRecoil = false;
+        public bool autoLock = false;
+
+        public bool aimKeySecond = false;
+
+
         public int aimDelay = 10;
 
         public Vector4 circleColor = new Vector4(1, 0, 1, 1);
@@ -32,6 +38,8 @@ namespace SilentAim
                 ImGui.Checkbox("silent", ref silent);
                 ImGui.DragInt("aim delay", ref aimDelay);
                 ImGui.Checkbox("aim on spotted", ref aimOnSpotted);
+                ImGui.Checkbox("use mouse 6 for aiming", ref aimKeySecond);
+                ImGui.Checkbox("autoLock", ref autoLock);
                 ImGui.Checkbox("autoShoot", ref autoShoot);
                 if (!aimOnClosest) ImGui.Checkbox("fov", ref useFov);
                 if (useFov)
@@ -46,7 +54,7 @@ namespace SilentAim
 
             ImGui.End();
 
-            if (useFov)
+            if (useFov && aimbot)
             {
                 DrawOverlay(screenSize);
             }

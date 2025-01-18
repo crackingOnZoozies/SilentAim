@@ -16,12 +16,15 @@ renderer.Start().Wait();
 List<Entity> entities = new List<Entity>();
 Entity localPlayer = new Entity();
 
-const int hotKeyAimSwitch = 0x12;//alt
-const int hotKey = 0x01; // mouse left
+const int hotKeyAimSwitch = 0x06;//mouse 5 0x06;//mouse 6
+
+const int hotKeyLeft = 0x01; // mouse left
 
 const int PlusAttack = 65537;
 const int MinusAttack = 256;
 const int attackMinus2 = 16777472;
+
+
 
 //aimbot loop
 while (true)
@@ -38,6 +41,8 @@ while (true)
     localPlayer.team = swed.ReadInt(localPlayer.pawnAddress, Offsets.m_iTeamNum);
     localPlayer.origin = swed.ReadVec(localPlayer.pawnAddress, Offsets.m_vOldOrigin);
     localPlayer.view = swed.ReadVec(localPlayer.pawnAddress, Offsets.m_vecViewOffset);
+
+    int shotsFired = swed.ReadInt(localPlayer.pawnAddress, Offsets.m_iShotsFired);
 
     //loop thogh entity list
     for (int i = 0; i < 64; i++)
@@ -118,12 +123,14 @@ while (true)
     }
 
     localPlayer.scopped =  swed.ReadBool(Offsets.dwLocalPlayerPawn, Offsets.m_bOldIsScoped);
+
     
 
-    if (renderer.aimbot) { }
-
+    if (!renderer.aimbot) { continue; }
+    
     bool swedBool = swed.ReadInt(client + Offsets.dwForceAttack) == PlusAttack;
-
+    if (renderer.aimKeySecond) swedBool = GetAsyncKeyState(hotKeyAimSwitch) < 0;
+    if(renderer.autoLock) swedBool = true;
     if (renderer.aimOnClosest)
     {
         entities = entities.OrderBy(o => o.distance).ToList();
@@ -179,7 +186,7 @@ while (true)
                 swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
                 Thread.Sleep(renderer.aimDelay);
 
-                
+
 
                 if (renderer.silent)
                 {
@@ -193,7 +200,7 @@ while (true)
                 swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
                 Thread.Sleep(renderer.aimDelay);
 
-                
+
 
                 if (renderer.silent)
                 {
@@ -206,7 +213,7 @@ while (true)
 
         }
     }
-    
+
 
 }
 //imports 

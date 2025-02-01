@@ -7,10 +7,12 @@ using System.Runtime.InteropServices;
 
 Swed swed = new Swed("cs2");
 IntPtr client = swed.GetModuleBase("client.dll");
+IntPtr engine2 = swed.GetModuleBase("engine2.dll");
 
-Vector2 screenSize = new Vector2(1920, 1080);
+Vector2 screenSize = new Vector2(swed.ReadInt(engine2+Offsets.dwWindowWidth), swed.ReadInt(engine2 + Offsets.dwWindowHeight));
 
 Renderer renderer = new Renderer();
+//renderer.screenSize = screenSize;
 renderer.Start().Wait();
 
 List<Entity> entities = new List<Entity>();
@@ -213,7 +215,41 @@ while (true)
 
         }
     }
+    if (renderer.autoShoot)
+    {
+        IntPtr localPlayerPawn = swed.ReadPointer(client, Offsets.dwLocalPlayerPawn);
 
+        //get our team and crosshair id
+        int team = swed.ReadInt(localPlayerPawn, Offsets.m_iTeamNum);
+        int entIndex = swed.ReadInt(localPlayerPawn, Offsets.m_iIDEntIndex);
+
+        //check index to console
+        Console.WriteLine($"crosshair/entity id: {entIndex}");
+
+        if (entIndex != -1)
+        {
+            
+            //then get pawn from that controller
+            IntPtr currentPawn = swed.ReadPointer(listEntry, 0x78 * (entIndex & 0x1FF));
+
+            //get the team
+            int entityTeam = swed.ReadInt(currentPawn, Offsets.m_iTeamNum);
+
+            if (team != entityTeam)
+            {
+                //check for hotkey
+                if (renderer.autoShoot && GetAsyncKeyState(hotKeyAimSwitch) < 0)
+                {
+                    Thread.Sleep(renderer.aimDelay+10);
+                    Thread.Sleep(renderer.aimDelay);
+                    swed.WriteInt(client, Offsets.dwForceAttack, 65537); // + attack
+                    Thread.Sleep(10);
+                    swed.WriteInt(client, Offsets.dwForceAttack, 16777472); // - attack
+                    Thread.Sleep(10);
+                }
+            }
+        }
+    }
 
 }
 //imports 

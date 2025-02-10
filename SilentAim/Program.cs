@@ -9,7 +9,8 @@ Swed swed = new Swed("cs2");
 IntPtr client = swed.GetModuleBase("client.dll");
 IntPtr engine2 = swed.GetModuleBase("engine2.dll");
 
-Vector2 screenSize = new Vector2(swed.ReadInt(engine2+Offsets.dwWindowWidth), swed.ReadInt(engine2 + Offsets.dwWindowHeight));
+Vector2 screenSize = new Vector2(1920, 1080);
+//Vector2 screenSize = new Vector2(swed.ReadInt(engine2+Offsets.dwWindowWidth), swed.ReadInt(engine2 + Offsets.dwWindowHeight));
 
 Renderer renderer = new Renderer();
 //renderer.screenSize = screenSize;
@@ -133,15 +134,12 @@ while (true)
     bool swedBool = swed.ReadInt(client + Offsets.dwForceAttack) == PlusAttack;
     if (renderer.aimKeySecond) swedBool = GetAsyncKeyState(hotKeyAimSwitch) < 0;
     if(renderer.autoLock) swedBool = true;
+
     if (renderer.aimOnClosest)
     {
         entities = entities.OrderBy(o => o.distance).ToList();
         if (entities.Count > 0 && (swedBool))
         {
-
-            float y, x;
-            x = swed.ReadFloat(client + Offsets.xAddress);
-            y = swed.ReadFloat(client + Offsets.yAddress);
 
             //get view pos
             Vector3 playerView = Vector3.Add(localPlayer.origin, localPlayer.view);
@@ -156,13 +154,6 @@ while (true)
 
 
 
-            if (renderer.silent)
-            {
-                swed.WriteFloat(client + Offsets.xAddress, x);
-                swed.WriteFloat(client + Offsets.yAddress, y);
-            }
-
-
         }
     }
     else
@@ -170,10 +161,6 @@ while (true)
         entities = entities.OrderBy(o => o.pixelDistance).ToList();
         if (entities.Count > 0 && (swedBool))
         {
-
-            float y, x;
-            x = swed.ReadFloat(client + Offsets.xAddress);
-            y = swed.ReadFloat(client + Offsets.yAddress);
 
             //get view pos
             Vector3 playerView = Vector3.Add(localPlayer.origin, localPlayer.view);
@@ -189,26 +176,12 @@ while (true)
                 Thread.Sleep(renderer.aimDelay);
 
 
-
-                if (renderer.silent)
-                {
-                    swed.WriteFloat(client + Offsets.xAddress, x);
-                    swed.WriteFloat(client + Offsets.yAddress, y);
-                }
-
             }
             else if (renderer.FOV > 0 && !renderer.useFov)
             {
                 swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
                 Thread.Sleep(renderer.aimDelay);
 
-
-
-                if (renderer.silent)
-                {
-                    swed.WriteFloat(client + Offsets.xAddress, x);
-                    swed.WriteFloat(client + Offsets.yAddress, y);
-                }
 
             }
 

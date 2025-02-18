@@ -135,12 +135,14 @@ while (true)
     if (renderer.aimKeySecond) swedBool = GetAsyncKeyState(hotKeyAimSwitch) < 0;
     if(renderer.autoLock) swedBool = true;
 
+    
     if (renderer.aimOnClosest)
     {
         entities = entities.OrderBy(o => o.distance).ToList();
         if (entities.Count > 0 && (swedBool))
         {
-
+            float y = swed.ReadFloat(client + Offsets.dwViewAngles);
+            float x = swed.ReadFloat(client + Offsets.dwViewAngles+0x4);
             //get view pos
             Vector3 playerView = Vector3.Add(localPlayer.origin, localPlayer.view);
             Vector3 entityView = Vector3.Add(entities[0].origin, entities[0].view);
@@ -152,7 +154,7 @@ while (true)
             swed.WriteVec(client, Offsets.dwViewAngles, newNagles3D);
             Thread.Sleep(renderer.aimDelay);
 
-
+            if (renderer.silent) swed.WriteVec(client, Offsets.dwViewAngles, new Vector3(y, x, 0f));
 
         }
     }
@@ -161,7 +163,8 @@ while (true)
         entities = entities.OrderBy(o => o.pixelDistance).ToList();
         if (entities.Count > 0 && (swedBool))
         {
-
+            float y = swed.ReadFloat(client + Offsets.dwViewAngles);
+            float x = swed.ReadFloat(client + Offsets.dwViewAngles + 0x4);
             //get view pos
             Vector3 playerView = Vector3.Add(localPlayer.origin, localPlayer.view);
             Vector3 entityView = Vector3.Add(entities[0].origin, entities[0].view);
@@ -184,6 +187,8 @@ while (true)
 
 
             }
+
+            if (renderer.silent) swed.WriteVec(client, Offsets.dwViewAngles, new Vector3(y, x, 0f));
 
 
         }

@@ -195,37 +195,47 @@ while (true)
     }
     if (renderer.autoShoot)
     {
-        IntPtr localPlayerPawn = swed.ReadPointer(client, Offsets.dwLocalPlayerPawn);
-
-        //get our team and crosshair id
-        int team = swed.ReadInt(localPlayerPawn, Offsets.m_iTeamNum);
-        int entIndex = swed.ReadInt(localPlayerPawn, Offsets.m_iIDEntIndex);
-
-        //check index to console
-        Console.WriteLine($"crosshair/entity id: {entIndex}");
-
-        if (entIndex != -1)
+        if (renderer.triggerAsAutoShoot)
         {
-            
-            //then get pawn from that controller
-            IntPtr currentPawn = swed.ReadPointer(listEntry, 0x78 * (entIndex & 0x1FF));
+            IntPtr localPlayerPawn = swed.ReadPointer(client, Offsets.dwLocalPlayerPawn);
 
-            //get the team
-            int entityTeam = swed.ReadInt(currentPawn, Offsets.m_iTeamNum);
+            //get our team and crosshair id
+            int team = swed.ReadInt(localPlayerPawn, Offsets.m_iTeamNum);
+            int entIndex = swed.ReadInt(localPlayerPawn, Offsets.m_iIDEntIndex);
 
-            if (team != entityTeam)
+            //check index to console
+            Console.WriteLine($"crosshair/entity id: {entIndex}");
+
+            if (entIndex != -1)
             {
-                //check for hotkey
-                if (renderer.autoShoot && GetAsyncKeyState(hotKeyAimSwitch) < 0)
+
+                //then get pawn from that controller
+                IntPtr currentPawn = swed.ReadPointer(listEntry, 0x78 * (entIndex & 0x1FF));
+
+                //get the team
+                int entityTeam = swed.ReadInt(currentPawn, Offsets.m_iTeamNum);
+
+                if (team != entityTeam)
                 {
-                    Thread.Sleep(renderer.aimDelay+10);
-                    Thread.Sleep(renderer.aimDelay);
-                    swed.WriteInt(client, Offsets.dwForceAttack, 65537); // + attack
-                    Thread.Sleep(10);
-                    swed.WriteInt(client, Offsets.dwForceAttack, 16777472); // - attack
-                    Thread.Sleep(10);
+                    //check for hotkey
+                    if (renderer.autoShoot && GetAsyncKeyState(hotKeyAimSwitch) < 0)
+                    {
+                        Thread.Sleep(renderer.millisecondsDelay);
+                        swed.WriteInt(client, Offsets.dwForceAttack, 65537); // + attack
+                        Thread.Sleep(10);
+                        swed.WriteInt(client, Offsets.dwForceAttack, 16777472); // - attack
+                        Thread.Sleep(10);
+                    }
                 }
             }
+        }
+        else if(swedBool)
+        {
+            Thread.Sleep(renderer.millisecondsDelay);
+            swed.WriteInt(client, Offsets.dwForceAttack, 65537); // + attack
+            Thread.Sleep(10);
+            swed.WriteInt(client, Offsets.dwForceAttack, 16777472); // - attack
+            Thread.Sleep(10);
         }
     }
 

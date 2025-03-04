@@ -21,7 +21,8 @@ namespace SilentAim
         public bool autoLock = false;
 
         public bool aimKeySecond = false;
-
+        public int millisecondsDelay = 0;
+        public bool triggerAsAutoShoot = true;
 
         public int aimDelay = 10;
 
@@ -41,7 +42,14 @@ namespace SilentAim
                 ImGui.Checkbox("use mouse 6 for aiming", ref aimKeySecond);
                 ImGui.Checkbox("autoLock", ref autoLock);
                 ImGui.Checkbox("autoShoot", ref autoShoot);
+                if (autoShoot)
+                {
+                    ImGui.Checkbox("use normal triggerbot", ref triggerAsAutoShoot);
+                    ImGui.DragInt("delay", ref millisecondsDelay);
+                }
+
                 if (!aimOnClosest) ImGui.Checkbox("fov", ref useFov);
+
                 if (useFov)
                 {
                     ImGui.SliderFloat("fov", ref FOV, 10, 300.0f);

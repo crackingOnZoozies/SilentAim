@@ -48,7 +48,7 @@ namespace SilentAim
         public static IntPtr xAddressSilent = 0x1A8A4A8 + 0x4;
 
         //engine
-        public static nint dwWindowHeight = 0x62354C;
-        public static nint dwWindowWidth = 0x623548;
+        public static nint dwWindowHeight = 0x62351C;
+        public static nint dwWindowWidth = 0x623518;
     }
 }

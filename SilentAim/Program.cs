@@ -9,11 +9,11 @@ Swed swed = new Swed("cs2");
 IntPtr client = swed.GetModuleBase("client.dll");
 IntPtr engine2 = swed.GetModuleBase("engine2.dll");
 
-Vector2 screenSize = new Vector2(1920, 1080);
-//Vector2 screenSize = new Vector2(swed.ReadInt(engine2+Offsets.dwWindowWidth), swed.ReadInt(engine2 + Offsets.dwWindowHeight));
+//Vector2 screenSize = new Vector2(1920, 1080);
+Vector2 screenSize = new Vector2(swed.ReadInt(engine2+Offsets.dwWindowWidth), swed.ReadInt(engine2 + Offsets.dwWindowHeight));
 
 Renderer renderer = new Renderer();
-//renderer.screenSize = screenSize;
+renderer.screenSize = screenSize;
 renderer.Start().Wait();
 
 List<Entity> entities = new List<Entity>();
